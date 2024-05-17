@@ -1,0 +1,88 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+th {
+    background-color: #f2f2f2;
+}
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+/* Tombol warna hijau */
+.btn-green {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Tombol warna orange */
+.btn-orange {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Tombol warna merah */
+.btn-red {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Keterangan aksi */
+.action-description {
+    margin-left: 5px;
+}
+/* Kotak pencarian */
+.search-container {
+    text-align: right;
+    margin-bottom: 10px;
+}
+.search-container input[type=text] {
+    padding: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.search-container button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 15px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+}
+/* Tombol tambah */
+.btn-add {
+    background-color: #007bff; /* Warna latar belakang */
+    color: white; /* Warna teks */
+    border: none;
+    margin-right: 15px;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto; /* Atau bisa juga tidak mengatur lebar sama sekali */
+    display: flex;
+    justify-content: flex-end; /* Mengatur posisi tombol ke pojok kanan */
+}
+
+/* Gaya tambahan untuk judul */
+h1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
