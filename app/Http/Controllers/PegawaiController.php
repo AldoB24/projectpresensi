@@ -14,7 +14,7 @@ class PegawaiController extends Controller
         $npage = 6;
         $pegawai = User::where('role', 'pegawai')
                     ->orderBy('created_at', 'desc')
-                    ->paginate(4);
+                    ->paginate(5);
         return view('pegawai.index', compact('pegawai', 'npage'));
     }
 

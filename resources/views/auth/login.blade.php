@@ -66,8 +66,8 @@
                     </div>
                     <div class="mb-2">
                       <label class="form-check">
-                        <input type="checkbox" class="form-check-input"/>
-                        <span class="form-check-label">Ingat Saya!</span>
+                        <!-- <input type="checkbox" class="form-check-input"/> -->
+                        <!-- <span class="form-check-label">Ingat Saya!</span> -->
                       </label>
                     </div>
                     

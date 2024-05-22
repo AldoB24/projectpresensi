@@ -133,41 +133,45 @@ public function exportlap($bulan, $tahun)
         ]);
     }
 
-public function excellap(Request $request)
-{
-    $bulan = $request->input('bulan', date('m'));
-    $tahun = $request->input('tahun', date('Y'));
-
-    $izins = Izin::select('izins.*', 'izins.tanggal as tanggal_izin', 'izins.keterangan as keterangan_izin', 'users.name as name', 'users.job_title as job_title')
-                ->join('users', 'users.id', '=', 'izins.user_id')
-                ->whereMonth('izins.tanggal', $bulan)
-                ->whereYear('izins.tanggal', $tahun)
-                ->get();
-
-    $attendances = Attendance::select('attendances.*', 'attendances.tanggal as tanggal_hadir', 'attendances.keterangan as keterangan_hadir', 'users.name as name', 'users.job_title as job_title')
-                                ->join('users', 'users.id', '=', 'attendances.user_id')
-                                ->whereMonth('attendances.tanggal', $bulan)
-                                ->whereYear('attendances.tanggal', $tahun)
-                                ->get();
+    public function excellap(Request $request)
+    {
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
     
-    // Merge the data of izins and attendances
-    $laporans = $izins->merge($attendances);
+        $izins = Izin::select('izins.*', 'izins.tanggal as tanggal_izin', 'izins.keterangan as keterangan_izin', 'users.name as name', 'users.job_title as job_title')
+                    ->join('users', 'users.id', '=', 'izins.user_id')
+                    ->whereMonth('izins.tanggal', $bulan)
+                    ->whereYear('izins.tanggal', $tahun)
+                    ->get();
     
-    // Retrieve user data with attendance and izin relations and count the number of attendances and izins
-    $laporans = User::with(['attendances', 'izins'])
-                    ->where('role', 'pegawai')
-                    ->get()
-                    ->map(function ($user) use ($bulan, $tahun) {
-                        $user->attendances = $user->attendances()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
-                        $user->izins = $user->izins()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
-                        $user->hadir_count = $user->attendances->count();
-                        $user->izin_count = $user->izins->count();
-                        return $user;
-                    });
+        $attendances = Attendance::select('attendances.*', 'attendances.tanggal as tanggal_hadir', 'attendances.keterangan as keterangan_hadir', 'users.name as name', 'users.job_title as job_title')
+                                    ->join('users', 'users.id', '=', 'attendances.user_id')
+                                    ->whereMonth('attendances.tanggal', $bulan)
+                                    ->whereYear('attendances.tanggal', $tahun)
+                                    ->get();
 
-    // Export the data using Laravel Excel
-    return Excel::download(new ExportLap($laporans, $bulan), 'laporan_rekap.xlsx');
-}
+        $laporans = User::with(['attendances', 'izins'])
+                ->where('role', 'pegawai')
+                ->paginate(10); 
+                
+        // Merge the data of izins and attendances
+        $laporans = $izins->merge($attendances);
+        
+        // Retrieve user data with attendance and izin relations and count the number of attendances and izins
+        $laporans = User::with(['attendances', 'izins'])
+                        ->where('role', 'pegawai')
+                        ->get()
+                        ->map(function ($user) use ($bulan, $tahun) {
+                            $user->attendances = $user->attendances()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+                            $user->izins = $user->izins()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+                            $user->hadir_count = $user->attendances->count();
+                            $user->izin_count = $user->izins->count();
+                            return $user;
+                        });
+    
+        // Export the data using Laravel Excel
+        return Excel::download(new ExportLap($laporans, $bulan, $tahun), 'laporan_rekap.xlsx');
+    }
 
 
 

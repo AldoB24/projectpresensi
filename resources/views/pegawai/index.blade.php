@@ -110,7 +110,7 @@
                     </div>
                     <div class="form-group">
                     <label for="phone_number">Nomor Telepon</label>
-                    <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Masukkan nomor telepon" pattern="[0-9]{10,13}" title="Harap masukkan nomor telepon dengan panjang minimal 10 dan maksimal 13 angka" required>
+                    <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ $item->phone_number }}" pattern="[0-9]{10,13}" title="Harap masukkan nomor telepon dengan panjang minimal 10 dan maksimal 13 angka" required>
                     </div>
                     <div class="form-group">
                         <label for="job_title">Jabatan</label>

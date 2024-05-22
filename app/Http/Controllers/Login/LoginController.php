@@ -16,25 +16,39 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        // Validate the incoming request data
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
+        // Attempt to authenticate the user with the given credentials
         if (Auth::attempt($credentials)) {
+            // Regenerate the session ID to help prevent session fixation attacks
             $request->session()->regenerate();
 
-            // Mengambil informasi pengguna yang terotentikasi
+            // Retrieve the authenticated user
             $user = Auth::user();
 
-            // Menyimpan informasi pengguna dalam sesi  
-            Session::put('user_name', $user->name);
+            // Check if the user has the 'pegawai' role
+            if ($user->role === 'admin') {
+                // Store the user's name in the session
+                Session::put('user_name', $user->name);
 
-            return redirect('dashboard');
+                // Redirect to the dashboard
+                return redirect('dashboard');
+            } else {
+                // If the user does not have the 'pegawai' role, log them out and redirect back with an error message
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun ini tidak memiliki akses sebagai admin.',
+                ]);
+            }
         }
 
+        // If the authentication attempt fails, redirect back with an error message
         return back()->withErrors([
-            'login_error' => 'Email atau password tidak terdaftar.',
+            'email' => 'Kredensial yang diberikan tidak cocok dengan data kami.',
         ]);
     }
 }

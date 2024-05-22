@@ -38,7 +38,7 @@ class DashboardController extends Controller
         $npage = 1;
         $pegawai = User::where('role', 'pegawai') // Mengambil hanya pegawai dengan role 'pegawai'
         ->orderBy('created_at', 'desc')
-        ->paginate(4);
+        ->paginate(5);
         return view('jumlahkaryawan', compact('pegawai', 'npage'));
     }
 
@@ -60,6 +60,8 @@ class DashboardController extends Controller
     // Ambil data berdasarkan filter
     $on_time = $query->get(); // Mengganti variabel $tepat_waktu menjadi $on_time
 
+    // Ambil data berdasarkan filter dengan pagination
+    $on_time = $query->paginate(5); 
     // Jika permintaan datang dari API, kembalikan respons JSON
     if ($request->expectsJson()) {
         return response()->json([
@@ -74,7 +76,7 @@ class DashboardController extends Controller
     return view('attend.tepatwaktu', compact('on_time', 'npage')); // Mengubah variabel $tepat_waktu menjadi $on_time
 }
 
-public function terlambat(Request $request) 
+public function terlambat(Request $request)
 {
     $npage = 4;
     
@@ -90,13 +92,13 @@ public function terlambat(Request $request)
         $query->whereDate('tanggal', $filter_date);
     }
 
-    // Ambil data terlambat berdasarkan filter
-    $terlambats = $query->get();
+    // Ambil data terlambat berdasarkan filter dengan pagination
+    $terlambats = $query->paginate(10); // Sesuaikan jumlah item yang ingin ditampilkan per halaman
 
     if ($request->expectsJson()) {
         return response()->json([
             'success' => true,
-            'message' => 'Sukses mendapatkan data pegawai yang hadir tepat waktu',
+            'message' => 'Sukses mendapatkan data pegawai yang hadir terlambat',
             'data' => $terlambats
         ]);
     }                       
@@ -114,10 +116,12 @@ public function izin(Request $request)
     $filter_date = $request->input('filter_date', now()->toDateString());
 
     // Query untuk mendapatkan data izin hanya untuk hari ini
-    $izins = Izin::select('izins.*', 'users.name as name', 'users.job_title as job_title')
+    $izinsQuery = Izin::select('izins.*', 'users.name as name', 'users.job_title as job_title')
                     ->join('users', 'users.id', '=', 'izins.user_id')
-                    ->whereDate('izins.tanggal', $filter_date)
-                    ->get();
+                    ->whereDate('izins.tanggal', $filter_date);
+
+    // Ambil data izin berdasarkan filter dengan pagination
+    $izins = $izinsQuery->paginate(10); // Sesuaikan jumlah item yang ingin ditampilkan per halaman
 
     if ($request->expectsJson()) {
         return response()->json([
@@ -130,6 +134,7 @@ public function izin(Request $request)
     return view('attend.izin', compact('izins', 'npage'));
 }
 
+
     // public function rekap()
     // {
     //     $npage = 5;
@@ -137,52 +142,52 @@ public function izin(Request $request)
     // }
     
     public function laporan(Request $request)
-    {
-        $npage = 7;
-        // $npage = 8;
-        
-    
-        $bulan = $request->input('bulan') ?? date('m');
-        $tahun = $request->input('tahun') ?? date('Y');
-    
-        // Ambil data izin sesuai bulan dan tahun yang dipilih
-        $izins = Izin::select('izins.*', 'izins.tanggal as tanggal_izin', 'izins.keterangan as keterangan_izin', 'users.name as name', 'users.job_title as job_title')
-            ->join('users', 'users.id', '=', 'izins.user_id')
-            ->whereMonth('izins.tanggal', $bulan)
-            ->whereYear('izins.tanggal', $tahun)
-            ->get();
-    
-        // Ambil data kehadiran sesuai bulan dan tahun yang dipilih
-        $attendances = Attendance::select('attendances.*', 'attendances.tanggal as tanggal_hadir', 'attendances.keterangan as keterangan_hadir', 'users.name as name', 'users.job_title as job_title')
-            ->join('users', 'users.id', '=', 'attendances.user_id')
-            ->whereMonth('attendances.tanggal', $bulan)
-            ->whereYear('attendances.tanggal', $tahun)
-            ->get();
-        
-        // Gabungkan data izin dan kehadiran
-        $laporans = $izins->merge($attendances);
-    
-        // Ambil data user dengan relasi kehadiran dan izin
-        $laporans = User::with(['attendances', 'izins'])
-                        ->where('role', 'pegawai')
-                        ->get()
-                        ->map(function ($user) use ($bulan, $tahun) {
-                            // Filter kehadiran sesuai bulan dan tahun yang dipilih
-                            $user->attendances = $user->attendances()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
-                            // Filter izin sesuai bulan dan tahun yang dipilih
-                            $user->izins = $user->izins()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
-                            // Hitung jumlah kehadiran dan izin
-                            $user->hadir_count = $user->attendances->count();
-                            $user->izin_count = $user->izins->count();
-                            return $user;
-                        });
-    
-        return view('laporan', [
-            'laporans' => $laporans,
-            'npage' => $npage,
-            'bulan' => $bulan, 'tahun' => $tahun
-        ]);
-    }
+{
+    $npage = 7; // Set the number of items per page
+
+    $bulan = $request->input('bulan') ?? date('m');
+    $tahun = $request->input('tahun') ?? date('Y');
+
+    // Ambil data izin sesuai bulan dan tahun yang dipilih
+    $izins = Izin::select('izins.*', 'izins.tanggal as tanggal_izin', 'izins.keterangan as keterangan_izin', 'users.name as name', 'users.job_title as job_title')
+        ->join('users', 'users.id', '=', 'izins.user_id')
+        ->whereMonth('izins.tanggal', $bulan)
+        ->whereYear('izins.tanggal', $tahun)
+        ->get();
+
+    // Ambil data kehadiran sesuai bulan dan tahun yang dipilih
+    $attendances = Attendance::select('attendances.*', 'attendances.tanggal as tanggal_hadir', 'attendances.keterangan as keterangan_hadir', 'users.name as name', 'users.job_title as job_title')
+        ->join('users', 'users.id', '=', 'attendances.user_id')
+        ->whereMonth('attendances.tanggal', $bulan)
+        ->whereYear('attendances.tanggal', $tahun)
+        ->get();
+
+    // Gabungkan data izin dan kehadiran
+    $laporans = $izins->merge($attendances);
+
+    // Ambil data user dengan relasi kehadiran dan izin, kemudian paginasi
+    $laporans = User::with(['attendances', 'izins'])
+        ->where('role', 'pegawai')
+        ->paginate(5); // Use $npage as the number of items per page
+
+    $laporans->each(function ($user) use ($bulan, $tahun) {
+        // Filter kehadiran sesuai bulan dan tahun yang dipilih
+        $user->attendances = $user->attendances()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+        // Filter izin sesuai bulan dan tahun yang dipilih
+        $user->izins = $user->izins()->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->get();
+        // Hitung jumlah kehadiran dan izin
+        $user->hadir_count = $user->attendances->count();
+        $user->izin_count = $user->izins->count();
+    });
+
+    return view('laporan', [
+        'laporans' => $laporans,
+        'npage' => $npage,
+        'bulan' => $bulan,
+        'tahun' => $tahun
+    ]);
+}
+
     
     
 

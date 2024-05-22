@@ -21,9 +21,9 @@
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <h2 class="page-title">Dashboard</h2>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active">Selamat Datang di E-Presensi Karyawan Arsenet Global Solution</li>
-                </ol>
+                <h1 class="breadcrumb">
+                    <p class="breadcrumb-item active">Selamat Datang di E-Presensi Karyawan Arsenet Global Solusi</p>
+                </h1>
             </div>
             <div class="col-sm-6">
                 <div class="float-right d-none d-md-block">

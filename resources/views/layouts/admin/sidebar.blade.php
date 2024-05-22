@@ -12,10 +12,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <h1 class="navbar-brand navbar-brand-autodark">
-        <a>
-            <img src="{{ asset('tabler/static/ags.png') }}" class="navbar-brand-image" style="width: 100px; height: 100px;">
-        </a>
-    </h1>
+                <a>
+                    <img src="{{ asset('tabler/static/ags.png') }}" class="navbar-brand-image" style="width: 100px; height: 100px;">
+                </a>
+            </h1>
             <div class="collapse navbar-collapse" id="sidebar-menu">
                 <ul class="navbar-nav pt-lg-3">
                     <li class="nav-item">

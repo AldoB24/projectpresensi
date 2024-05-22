@@ -1,7 +1,7 @@
 @extends('layouts.admin.dashboard')
 
 @php
-    $title = 'Karyawan';
+    $title = 'Karyawan Pulang';
 @endphp
 
 @section('content')
@@ -51,6 +51,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                               
                                 @foreach($tepat_pulang as $key => $employee)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>

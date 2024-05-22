@@ -7,7 +7,7 @@
         <h3 class="card-title">Laporan Semua Karyawan</h3>
         <div class="card-header-right">
             <div class="ml-auto">
-                <label for="dataCount">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <label for="dataCount">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                     <div class="mb-3 d-inline-block">
                         <div class="ml-auto">
                             <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari..." style="padding: 5px; margin-right: 18px;">
@@ -62,7 +62,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                
+                @php
+    $currentPage = $laporans->currentPage() ?? 1; // Get current page
+    $perPage = $laporans->perPage(); // Get number of items per page
+    $startNumber = ($currentPage - 1) * $perPage + 1; // Calculate starting number
+@endphp
                     @foreach($laporans as $laporan)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
@@ -83,7 +87,25 @@
         </div>
     </div>
 </div>
-
+<!-- Pagination -->
+<br></br>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {{ ($laporans->onFirstPage()) ? 'disabled' : '' }}">
+            <a class="page-link" href="{{ $laporans->previousPageUrl() }}">
+                <span class="page-text-box">Previous</span>
+            </a>
+        </li>
+        @for ($i = 1; $i <= $laporans->lastPage(); $i++)
+            <li class="page-item {{ ($laporans->currentPage() == $i) ? 'active' : '' }}">
+                <a class="page-link" href="{{ $laporans->url($i) }}">{{ $i }}</a>
+            </li>
+        @endfor
+        <li class="page-item {{ ($laporans->currentPage() == $laporans->lastPage()) ? 'disabled' : '' }}">
+            <a class="page-link" href="{{ $laporans->nextPageUrl() }}">Next</a>
+        </li>
+    </ul>
+</nav>
 
 <script>
     function searchTable() {

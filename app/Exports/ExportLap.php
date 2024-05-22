@@ -10,10 +10,11 @@ class ExportLap implements FromView
     protected $laporans;
     protected $bulan;
 
-    public function __construct($laporans, $bulan)
+    public function __construct($laporans, $bulan, $tahun)
     {
         $this->laporans = $laporans;
         $this->bulan = $bulan;
+        $this->tahun = $tahun;
     }
 
     public function view(): View
@@ -21,9 +22,7 @@ class ExportLap implements FromView
         return view('export.rekap_laporan', [
             'laporans' => $this->laporans,
             'bulan' => $this->bulan, // Teruskan nilai bulan ke view
+            'tahun' => $this->tahun
         ]);
     }
 }
-
-
-

@@ -321,7 +321,7 @@ Akses Individual dan Korporasi
         <div class="info">
           <div class="address">
             <i class="bi bi-geo-alt"></i>
-            <h4>Lokasi Kami:</h4>
+            <h4>Lokasi kami:</h4>
             <p>Rukan, Jl. Semeru Utama No.4, Tegal Boto Kidul, Sumbersari, Jember Regency, East Java 68121</p>
           </div>
         </div>
@@ -387,10 +387,7 @@ Akses Individual dan Korporasi
 
     <div class="container footer-bottom clearfix">
         <div class="copyright">
-            &copy; Copyright <strong><span>Arsha</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            &copy; Copyright <strong><span>Kelompok 2 PLJ TIF 2024</span></strong>. All Rights Reserved
         </div>
     </div>
 </footer><!-- End Footer -->
